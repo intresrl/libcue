@@ -89,6 +89,26 @@ func cue_lookup_string(v C.cue_value, str *C.char, res *C.cue_value) C.cue_error
 	return 0
 }
 
+//export cue_lookup_any_index
+func cue_lookup_any_index(v C.cue_value, res *C.cue_value) C.cue_error {
+	target := cueValue(v).LookupPath(cue.MakePath(cue.AnyIndex))
+	if err := target.Err(); err != nil {
+		return cueErrorHandle(err)
+	}
+	*res = cueValueHandle(target)
+	return 0
+}
+
+//export cue_lookup_any_string
+func cue_lookup_any_string(v C.cue_value, res *C.cue_value) C.cue_error {
+	target := cueValue(v).LookupPath(cue.MakePath(cue.AnyString))
+	if err := target.Err(); err != nil {
+		return cueErrorHandle(err)
+	}
+	*res = cueValueHandle(target)
+	return 0
+}
+
 //export cue_from_int64
 func cue_from_int64(ctx C.cue_ctx, v C.int64_t) C.cue_value {
 	val := cueContext(ctx).Encode(int64(v))
@@ -123,6 +143,16 @@ func cue_from_string(ctx C.cue_ctx, str *C.char) C.cue_value {
 func cue_from_bytes(ctx C.cue_ctx, buf unsafe.Pointer, len C.size_t) C.cue_value {
 	val := cueContext(ctx).Encode(C.GoBytes(buf, C.int(len)))
 	return cueValueHandle(val)
+}
+
+//export cue_from_list
+func cue_from_list(ctx C.cue_ctx, values *C.cue_value, count C.size_t) C.cue_value {
+	var v []cue.Value
+	for _, val := range unsafe.Slice(values, count) {
+		v = append(v, cueValue(val))
+	}
+	nl := cueContext(ctx).NewList(v...)
+	return cueValueHandle(nl)
 }
 
 //export cue_dec_int64
@@ -285,4 +315,36 @@ func cue_value_error(v C.cue_value) C.cue_error {
 		return cueErrorHandle(err)
 	}
 	return 0
+}
+
+//export cue_path
+func cue_path(v C.cue_value) *C.char {
+	label := cueValue(v).Path().String()
+	return C.CString(label)
+}
+
+//export cue_list
+func cue_list(v C.cue_value, count *C.size_t) *C.cue_value {
+	iter, err := cueValue(v).List()
+	if err != nil {
+		return nil
+	}
+
+	var elements []cue.Value
+	for iter.Next() {
+		elements = append(elements, iter.Value())
+	}
+
+	*count = C.size_t(len(elements))
+
+	if len(elements) == 0 {
+		return nil
+	}
+
+	s, ptr := calloc[C.cue_value](len(elements), C.sizeof_cue_value)
+	for i, elem := range elements {
+		s[i] = cueValueHandle(elem)
+	}
+
+	return ptr
 }
