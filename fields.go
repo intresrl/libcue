@@ -26,8 +26,8 @@ import (
 )
 
 //export cue_fields
-func cue_fields(v C.cue_value, count *C.size_t) *C.cue_value {
-	iter, err := cueValue(v).Fields()
+func cue_fields(v C.cue_value, definitions C.bool, count *C.size_t) *C.cue_value {
+	iter, err := cueValue(v).Fields(cue.Definitions(bool(definitions)))
 	if err != nil {
 		return nil
 	}
@@ -38,7 +38,7 @@ func cue_fields(v C.cue_value, count *C.size_t) *C.cue_value {
 	}
 
 	*count = C.size_t(len(fields))
-	
+
 	if len(fields) == 0 {
 		return nil
 	}
