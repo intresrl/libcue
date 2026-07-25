@@ -103,6 +103,7 @@ cue_error	cue_compile_string(cue_ctx, char*, cue_bopt*, cue_value*);
 cue_error	cue_compile_bytes(cue_ctx, void*, size_t, cue_bopt*, cue_value*);
 cue_value*  cue_fields(cue_value, bool, size_t*);
 cue_value*	cue_list(cue_value, size_t*);
+cue_value*	cue_disjunctions(cue_value, size_t*);
 cue_value	cue_top(cue_ctx);
 cue_value	cue_bottom(cue_ctx);
 cue_value	cue_unify(cue_value, cue_value);
