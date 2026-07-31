@@ -370,3 +370,8 @@ func cue_disjunctions(v C.cue_value, count *C.size_t) *C.cue_value {
 
 	return ptr
 }
+
+//export cue_is_concrete
+func cue_is_concrete(v C.cue_value) C.bool {
+	return C.bool(cueValue(v).IsConcrete())
+}

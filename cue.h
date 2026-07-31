@@ -132,6 +132,7 @@ cue_kind	cue_incomplete_kind(cue_value);
 cue_error	cue_value_error(cue_value);
 char*	cue_path(cue_value);
 bool	cue_is_equal(cue_value, cue_value);
+bool	cue_is_concrete(cue_value);
 
 cue_bopt	cue_filename(char*);
 cue_bopt	cue_import_path(char*);
