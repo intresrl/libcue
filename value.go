@@ -276,8 +276,9 @@ func cue_concrete_kind(v C.cue_value) C.cue_kind {
 		return C.CUE_KIND_NUMBER
 	case cue.TopKind:
 		return C.CUE_KIND_TOP
+    default:
+		return C.CUE_KIND_UNKNOWN
 	}
-	panic("unreachable")
 }
 
 //export cue_incomplete_kind
@@ -305,8 +306,9 @@ func cue_incomplete_kind(v C.cue_value) C.cue_kind {
 		return C.CUE_KIND_NUMBER
 	case cue.TopKind:
 		return C.CUE_KIND_TOP
+	default:
+        return C.CUE_KIND_UNKNOWN
 	}
-	panic("unreachable")
 }
 
 //export cue_value_error

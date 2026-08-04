@@ -53,6 +53,7 @@ enum cue_kind {
 	CUE_KIND_LIST,
 	CUE_KIND_NUMBER,
 	CUE_KIND_TOP,
+	CUE_KIND_UNKNOWN
 };
 
 enum cue_eopt_tag {
