@@ -251,9 +251,17 @@ func cue_is_equal(x C.cue_value, y C.cue_value) C.bool {
 	return C.bool(cueValue(x).Equals(cueValue(y)))
 }
 
+const simpleKindMask = cue.BoolKind |
+	cue.IntKind |
+	cue.FloatKind |
+	cue.StringKind |
+	cue.BytesKind |
+	cue.NumberKind
+
 //export cue_concrete_kind
 func cue_concrete_kind(v C.cue_value) C.cue_kind {
-	switch cueValue(v).Kind() {
+	kind := cueValue(v).Kind()
+	switch kind {
 	case cue.BottomKind:
 		return C.CUE_KIND_BOTTOM
 	case cue.NullKind:
@@ -277,12 +285,16 @@ func cue_concrete_kind(v C.cue_value) C.cue_kind {
 	case cue.TopKind:
 		return C.CUE_KIND_TOP
 	}
+	if kind&simpleKindMask != 0 {
+		return C.CUE_KIND_TOP
+	}
 	panic("unreachable")
 }
 
 //export cue_incomplete_kind
 func cue_incomplete_kind(v C.cue_value) C.cue_kind {
-	switch cueValue(v).IncompleteKind() {
+	kind := cueValue(v).IncompleteKind()
+	switch kind {
 	case cue.BottomKind:
 		return C.CUE_KIND_BOTTOM
 	case cue.NullKind:
@@ -304,6 +316,9 @@ func cue_incomplete_kind(v C.cue_value) C.cue_kind {
 	case cue.NumberKind:
 		return C.CUE_KIND_NUMBER
 	case cue.TopKind:
+		return C.CUE_KIND_TOP
+	}
+	if kind&simpleKindMask != 0 {
 		return C.CUE_KIND_TOP
 	}
 	panic("unreachable")
