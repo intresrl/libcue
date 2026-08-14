@@ -14,7 +14,9 @@
 
 #include "cue.h"
 #include "option.h"
+#include "cue_export.h"
 
+CUE_EXPORT
 size_t
 cue_eopt_len(cue_eopt *opts) {
 	size_t len = 0;
@@ -30,6 +32,7 @@ cue_eopt_len(cue_eopt *opts) {
 	return len;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_all(void) {
 	cue_eopt o = (cue_eopt) {
@@ -39,6 +42,7 @@ cue_all(void) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_attributes(bool b) {
 	cue_eopt o = (cue_eopt) {
@@ -49,6 +53,7 @@ cue_attributes(bool b) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_concrete(bool b) {
 	cue_eopt o = (cue_eopt) {
@@ -59,6 +64,7 @@ cue_concrete(bool b) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_definitions(bool b) {
 	cue_eopt o = (cue_eopt) {
@@ -69,6 +75,7 @@ cue_definitions(bool b) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_disallow_cycles(bool b) {
 	cue_eopt o = (cue_eopt) {
@@ -79,6 +86,7 @@ cue_disallow_cycles(bool b) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_docs(bool b) {
 	cue_eopt o = (cue_eopt) {
@@ -89,6 +97,7 @@ cue_docs(bool b) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_errors_as_values(bool b) {
 	cue_eopt o = (cue_eopt) {
@@ -99,6 +108,7 @@ cue_errors_as_values(bool b) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_final(void) {
 	cue_eopt o = (cue_eopt) {
@@ -108,6 +118,7 @@ cue_final(void) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_hidden(bool b) {
 	cue_eopt o = (cue_eopt) {
@@ -118,6 +129,7 @@ cue_hidden(bool b) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_inline_imports(bool b) {
 	cue_eopt o = (cue_eopt) {
@@ -128,6 +140,7 @@ cue_inline_imports(bool b) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_optionals(bool b) {
 	cue_eopt o = (cue_eopt) {
@@ -138,6 +151,7 @@ cue_optionals(bool b) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_raw(void) {
 	cue_eopt o = (cue_eopt) {
@@ -147,6 +161,7 @@ cue_raw(void) {
 	return o;
 }
 
+CUE_EXPORT
 cue_eopt
 cue_schema(void) {
 	cue_eopt o = (cue_eopt) {

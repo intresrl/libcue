@@ -14,7 +14,9 @@
 
 #include "cue.h"
 #include "build.h"
+#include "cue_export.h"
 
+CUE_EXPORT
 size_t
 cue_bopt_len(cue_bopt *opts) {
 	size_t len = 0;
@@ -30,6 +32,7 @@ cue_bopt_len(cue_bopt *opts) {
 	return len;
 }
 
+CUE_EXPORT
 cue_bopt
 cue_filename(char *s) {
 	cue_bopt bo = (cue_bopt) {
@@ -40,6 +43,7 @@ cue_filename(char *s) {
 	return bo;
 }
 
+CUE_EXPORT
 cue_bopt
 cue_import_path(char *s) {
 	cue_bopt bo = (cue_bopt) {
@@ -50,6 +54,7 @@ cue_import_path(char *s) {
 	return bo;
 }
 
+CUE_EXPORT
 cue_bopt
 cue_infer_builtins(bool b) {
 	cue_bopt bo = (cue_bopt) {
@@ -60,6 +65,7 @@ cue_infer_builtins(bool b) {
 	return bo;
 }
 
+CUE_EXPORT
 cue_bopt
 cue_scope(cue_value v) {
 	cue_bopt bo = (cue_bopt) {

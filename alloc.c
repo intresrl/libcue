@@ -15,8 +15,11 @@
 #include <stdlib.h>
 #include "cue.h"
 #include "option.h"
+#include "cue_export.h"
 #include "_cgo_export.h"
 
+
+CUE_EXPORT
 size_t
 cue_cgo_handle_slice_len(uintptr_t *p) {
 	size_t len = 0;
@@ -32,12 +35,14 @@ cue_cgo_handle_slice_len(uintptr_t *p) {
 	return len;
 }
 
+CUE_EXPORT
 void
 cue_free_all(uintptr_t *p) {
 	cue_free_all_inner_raw(p, cue_cgo_handle_slice_len(p));
 	free(p);
 }
 
+CUE_EXPORT
 void
 libc_free(void *p) {
 	free(p);

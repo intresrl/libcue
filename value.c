@@ -15,23 +15,28 @@
 #include "cue.h"
 #include "build.h"
 #include "option.h"
+#include "cue_export.h"
 #include "_cgo_export.h"
 
+CUE_EXPORT
 cue_error
 cue_compile_string(cue_ctx ctx, char *s, cue_bopt *opts, cue_value *v) {
 	return cue_compile_string_raw(ctx, s, opts, cue_bopt_len(opts), v);
 }
 
+CUE_EXPORT
 cue_error
 cue_compile_bytes(cue_ctx ctx, void *b, size_t len, cue_bopt *opts, cue_value *v) {
 	return cue_compile_bytes_raw(ctx, b, len, opts, cue_bopt_len(opts), v);
 }
 
+CUE_EXPORT
 cue_error
 cue_instance_of(cue_value x, cue_value y, cue_eopt *opts) {
 	return cue_instance_of_raw(x, y, opts, cue_eopt_len(opts));
 }
 
+CUE_EXPORT
 cue_error
 cue_validate(cue_value v, cue_eopt *opts) {
 	return cue_validate_raw(v, opts, cue_eopt_len(opts));
