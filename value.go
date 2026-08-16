@@ -22,9 +22,11 @@ package main
 import "C"
 
 import (
+	"fmt"
 	"unsafe"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/format"
 )
 
 //export cue_compile_string_raw
@@ -288,7 +290,7 @@ func cue_concrete_kind(v C.cue_value) C.cue_kind {
 	if kind&simpleKindMask != 0 {
 		return C.CUE_KIND_TOP
 	}
-	panic("unreachable")
+	panic(fmt.Sprintf("unknown value kind %d\n", kind))
 }
 
 //export cue_incomplete_kind
@@ -452,9 +454,21 @@ func cue_expr(v C.cue_value) C.cue_expr_result {
 
 	var result C.cue_expr_result
 	result.op = opConversion(op)
-	result.count = C.size_t(len(values))
+
+	if op == cue.CallOp {
+		b, err := format.Node(values[0].Syntax())
+		if err != nil {
+			panic(fmt.Sprintf("format.Node cannot print func name node: %s", err.Error()))
+		}
+
+		result.call_name = C.CString(string(b))
+		values = values[1:]
+	} else {
+		result.call_name = nil
+	}
 
 	if len(values) == 0 {
+		result.count = 0
 		result.values = nil
 		return result
 	}
@@ -469,4 +483,9 @@ func cue_expr(v C.cue_value) C.cue_expr_result {
 	result.values = ptr
 
 	return result
+}
+
+//export cue_len
+func cue_len(v C.cue_value) C.cue_value {
+	return cueValueHandle(cueValue(v).Len())
 }
