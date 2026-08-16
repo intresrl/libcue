@@ -390,3 +390,83 @@ func cue_disjunctions(v C.cue_value, count *C.size_t) *C.cue_value {
 func cue_is_concrete(v C.cue_value) C.bool {
 	return C.bool(cueValue(v).IsConcrete())
 }
+
+func opConversion(op cue.Op) C.cue_op {
+	switch op {
+	case cue.NoOp:
+		return C.CUE_OP_NO
+	case cue.AndOp:
+		return C.CUE_OP_AND
+	case cue.OrOp:
+		return C.CUE_OP_OR
+	case cue.SelectorOp:
+		return C.CUE_OP_SELECTOR
+	case cue.IndexOp:
+		return C.CUE_OP_INDEX
+	case cue.SliceOp:
+		return C.CUE_OP_SLICE
+	case cue.CallOp:
+		return C.CUE_OP_CALL
+	case cue.BooleanAndOp:
+		return C.CUE_OP_BOOLEAN_AND
+	case cue.BooleanOrOp:
+		return C.CUE_OP_BOOLEAN_OR
+	case cue.EqualOp:
+		return C.CUE_OP_EQUAL
+	case cue.NotOp:
+		return C.CUE_OP_NOT
+	case cue.NotEqualOp:
+		return C.CUE_OP_NOT_EQUAL
+	case cue.LessThanOp:
+		return C.CUE_OP_LESS_THAN
+	case cue.LessThanEqualOp:
+		return C.CUE_OP_LESS_THAN_EQUAL
+	case cue.GreaterThanOp:
+		return C.CUE_OP_GREATER_THAN
+	case cue.GreaterThanEqualOp:
+		return C.CUE_OP_GREATER_THAN_EQUAL
+	case cue.RegexMatchOp:
+		return C.CUE_OP_REGEX_MATCH
+	case cue.NotRegexMatchOp:
+		return C.CUE_OP_NOT_REGEX_MATCH
+	case cue.AddOp:
+		return C.CUE_OP_ADD
+	case cue.SubtractOp:
+		return C.CUE_OP_SUBTRACT
+	case cue.MultiplyOp:
+		return C.CUE_OP_MULTIPLY
+	case cue.FloatQuotientOp:
+		return C.CUE_OP_FLOAT_QUOTIENT
+	case cue.InterpolationOp:
+		return C.CUE_OP_INTERPOLATION
+	case cue.SpreadOp:
+		return C.CUE_OP_SPREAD
+	default:
+		panic("unknown op")
+	}
+}
+
+//export cue_expr
+func cue_expr(v C.cue_value) C.cue_expr_result {
+	op, values := cueValue(v).Expr()
+
+	var result C.cue_expr_result
+	result.op = opConversion(op)
+	result.count = C.size_t(len(values))
+
+	if len(values) == 0 {
+		result.values = nil
+		return result
+	}
+
+	result.count = C.size_t(len(values))
+
+	s, ptr := calloc[C.cue_value](len(values), C.sizeof_cue_value)
+	for i, d := range values {
+		s[i] = cueValueHandle(d)
+	}
+
+	result.values = ptr
+
+	return result
+}

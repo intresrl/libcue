@@ -26,10 +26,12 @@ typedef uintptr_t cue_attr;
 typedef struct cue_bopt cue_bopt;
 typedef struct cue_eopt cue_eopt;
 typedef struct cue_attr_arg cue_attr_arg;
+typedef struct cue_expr_result cue_expr_result;
 typedef enum cue_eopt_tag cue_eopt_tag;
 typedef enum cue_bopt_tag cue_bopt_tag;
 typedef enum cue_attr_kind cue_attr_kind;
 typedef enum cue_kind cue_kind;
+typedef enum cue_op cue_op;
 
 enum cue_attr_kind {
 	CUE_ATTR_FIELD = 1<<0,
@@ -92,6 +94,39 @@ struct cue_bopt {
 	bool b;
 };
 
+enum cue_op {
+    CUE_OP_NO,
+    CUE_OP_AND,
+    CUE_OP_OR,
+    CUE_OP_SELECTOR,
+    CUE_OP_INDEX,
+    CUE_OP_SLICE,
+    CUE_OP_CALL,
+    CUE_OP_BOOLEAN_AND,
+    CUE_OP_BOOLEAN_OR,
+    CUE_OP_EQUAL,
+    CUE_OP_NOT,
+    CUE_OP_NOT_EQUAL,
+    CUE_OP_LESS_THAN,
+    CUE_OP_LESS_THAN_EQUAL,
+    CUE_OP_GREATER_THAN,
+    CUE_OP_GREATER_THAN_EQUAL,
+    CUE_OP_REGEX_MATCH,
+    CUE_OP_NOT_REGEX_MATCH,
+    CUE_OP_ADD,
+    CUE_OP_SUBTRACT,
+    CUE_OP_MULTIPLY,
+    CUE_OP_FLOAT_QUOTIENT,
+    CUE_OP_INTERPOLATION,
+    CUE_OP_SPREAD,
+};
+
+struct cue_expr_result {
+    cue_op op;
+    cue_value *values;
+    size_t count;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -103,6 +138,7 @@ cue_error	cue_compile_string(cue_ctx, char*, cue_bopt*, cue_value*);
 cue_error	cue_compile_bytes(cue_ctx, void*, size_t, cue_bopt*, cue_value*);
 cue_value*  cue_fields(cue_value, cue_eopt*, size_t*);
 cue_value*	cue_list(cue_value, size_t*);
+cue_expr_result cue_expr(cue_value);
 cue_value*	cue_disjunctions(cue_value, size_t*);
 cue_value	cue_top(cue_ctx);
 cue_value	cue_bottom(cue_ctx);
