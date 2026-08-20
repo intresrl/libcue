@@ -253,12 +253,14 @@ func cue_is_equal(x C.cue_value, y C.cue_value) C.bool {
 	return C.bool(cueValue(x).Equals(cueValue(y)))
 }
 
-const simpleKindMask = cue.BoolKind |
+const allKindMask = cue.BoolKind |
 	cue.IntKind |
 	cue.FloatKind |
 	cue.StringKind |
 	cue.BytesKind |
-	cue.NumberKind
+	cue.NumberKind |
+	cue.StructKind |
+	cue.ListKind
 
 //export cue_concrete_kind
 func cue_concrete_kind(v C.cue_value) C.cue_kind {
@@ -287,7 +289,7 @@ func cue_concrete_kind(v C.cue_value) C.cue_kind {
 	case cue.TopKind:
 		return C.CUE_KIND_TOP
 	}
-	if kind&simpleKindMask != 0 {
+	if kind&allKindMask != 0 { // disjunctions where kind is different are represented as a bitwise OR of all kinds of the branches
 		return C.CUE_KIND_TOP
 	}
 	panic(fmt.Sprintf("unknown value kind %d\n", kind))
@@ -320,10 +322,10 @@ func cue_incomplete_kind(v C.cue_value) C.cue_kind {
 	case cue.TopKind:
 		return C.CUE_KIND_TOP
 	}
-	if kind&simpleKindMask != 0 {
+	if kind&allKindMask != 0 {
 		return C.CUE_KIND_TOP
 	}
-	panic("unreachable")
+	panic(fmt.Sprintf("unknown value kind %d\n", kind))
 }
 
 //export cue_value_error
