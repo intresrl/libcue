@@ -368,28 +368,6 @@ func cue_list(v C.cue_value, count *C.size_t) *C.cue_value {
 	return ptr
 }
 
-//export cue_disjunctions
-func cue_disjunctions(v C.cue_value, count *C.size_t) *C.cue_value {
-	disjuncts := cueValue(v).Disjunctions()
-	if disjuncts == nil {
-		*count = 0
-		return nil
-	}
-
-	*count = C.size_t(len(disjuncts))
-
-	if len(disjuncts) == 0 {
-		return nil
-	}
-
-	s, ptr := calloc[C.cue_value](len(disjuncts), C.sizeof_cue_value)
-	for i, d := range disjuncts {
-		s[i] = cueValueHandle(d)
-	}
-
-	return ptr
-}
-
 //export cue_is_concrete
 func cue_is_concrete(v C.cue_value) C.bool {
 	return C.bool(cueValue(v).IsConcrete())

@@ -140,7 +140,6 @@ cue_error       cue_compile_bytes(cue_ctx, void*, size_t, cue_bopt*, cue_value*)
 cue_value*      cue_fields(cue_value, cue_eopt*, size_t*);
 cue_value*      cue_list(cue_value, size_t*);
 cue_expr_result cue_expr(cue_value);
-cue_value*      cue_disjunctions(cue_value, size_t*);
 cue_value	    cue_len(cue_value);
 cue_value       cue_top(cue_ctx);
 cue_value       cue_bottom(cue_ctx);
