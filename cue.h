@@ -27,6 +27,7 @@ typedef struct cue_bopt cue_bopt;
 typedef struct cue_eopt cue_eopt;
 typedef struct cue_attr_arg cue_attr_arg;
 typedef struct cue_expr_result cue_expr_result;
+typedef struct cue_float cue_float;
 typedef enum cue_eopt_tag cue_eopt_tag;
 typedef enum cue_bopt_tag cue_bopt_tag;
 typedef enum cue_attr_kind cue_attr_kind;
@@ -34,64 +35,64 @@ typedef enum cue_kind cue_kind;
 typedef enum cue_op cue_op;
 
 enum cue_attr_kind {
-       CUE_ATTR_FIELD = 1<<0,
-       CUE_ATTR_DECL  = 1<<1,
-       CUE_ATTR_VALUE = CUE_ATTR_FIELD|CUE_ATTR_DECL,
+    CUE_ATTR_FIELD = 1<<0,
+    CUE_ATTR_DECL  = 1<<1,
+    CUE_ATTR_VALUE = CUE_ATTR_FIELD|CUE_ATTR_DECL,
 };
 
 struct cue_attr_arg {
-       char *key, *val;
+    char *key, *val;
 };
 
 enum cue_kind {
-       CUE_KIND_BOTTOM,
-       CUE_KIND_NULL,
-       CUE_KIND_BOOL,
-       CUE_KIND_INT,
-       CUE_KIND_FLOAT,
-       CUE_KIND_STRING,
-       CUE_KIND_BYTES,
-       CUE_KIND_STRUCT,
-       CUE_KIND_LIST,
-       CUE_KIND_NUMBER,
-       CUE_KIND_TOP,
+    CUE_KIND_BOTTOM,
+    CUE_KIND_NULL,
+    CUE_KIND_BOOL,
+    CUE_KIND_INT,
+    CUE_KIND_FLOAT,
+    CUE_KIND_STRING,
+    CUE_KIND_BYTES,
+    CUE_KIND_STRUCT,
+    CUE_KIND_LIST,
+    CUE_KIND_NUMBER,
+    CUE_KIND_TOP,
 };
 
 enum cue_eopt_tag {
-       CUE_OPT_NONE,
-       CUE_OPT_ALL,
-       CUE_OPT_ATTR,
-       CUE_OPT_CONCRETE,
-       CUE_OPT_DEFS,
-       CUE_OPT_DISALLOW_CYCLES,
-       CUE_OPT_DOCS,
-       CUE_OPT_ERRORS_AS_VALUES,
-       CUE_OPT_FINAL,
-       CUE_OPT_HIDDEN,
-       CUE_OPT_INLINE_IMPORTS,
-       CUE_OPT_OPTIONALS,
-       CUE_OPT_RAW,
-       CUE_OPT_SCHEMA,
+    CUE_OPT_NONE,
+    CUE_OPT_ALL,
+    CUE_OPT_ATTR,
+    CUE_OPT_CONCRETE,
+    CUE_OPT_DEFS,
+    CUE_OPT_DISALLOW_CYCLES,
+    CUE_OPT_DOCS,
+    CUE_OPT_ERRORS_AS_VALUES,
+    CUE_OPT_FINAL,
+    CUE_OPT_HIDDEN,
+    CUE_OPT_INLINE_IMPORTS,
+    CUE_OPT_OPTIONALS,
+    CUE_OPT_RAW,
+    CUE_OPT_SCHEMA,
 };
 
 struct cue_eopt {
-       cue_eopt_tag tag;
-       bool value;
+    cue_eopt_tag tag;
+    bool value;
 };
 
 enum cue_bopt_tag {
-       CUE_BUILD_NONE,
-       CUE_BUILD_FILENAME,
-       CUE_BUILD_IMPORT_PATH,
-       CUE_BUILD_INFER_BUILTINS,
-       CUE_BUILD_SCOPE,
+    CUE_BUILD_NONE,
+    CUE_BUILD_FILENAME,
+    CUE_BUILD_IMPORT_PATH,
+    CUE_BUILD_INFER_BUILTINS,
+    CUE_BUILD_SCOPE,
 };
 
 struct cue_bopt {
-       cue_bopt_tag tag;
-       cue_value value;
-       char *str;
-       bool b;
+    cue_bopt_tag tag;
+    cue_value value;
+    char *str;
+    bool b;
 };
 
 enum cue_op {
@@ -128,6 +129,13 @@ struct cue_expr_result {
     size_t count;
 };
 
+struct cue_float {
+    size_t mantissa_len;
+    int64_t exponent;
+    bool sign;
+    void* mantissa;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -159,6 +167,7 @@ cue_error       cue_dec_int64(cue_value, int64_t*);
 cue_error       cue_dec_uint64(cue_value, uint64_t*);
 cue_error       cue_dec_bool(cue_value, bool*);
 cue_error       cue_dec_double(cue_value, double*);
+cue_error       cue_dec_float(cue_value, cue_float*);
 cue_error       cue_dec_string(cue_value, char**);
 cue_error       cue_dec_bytes(cue_value, void**, size_t*);
 cue_error       cue_dec_json(cue_value, void**, size_t*);

@@ -197,6 +197,16 @@ func cue_dec_double(v C.cue_value, res *C.double) C.cue_error {
 	return 0
 }
 
+//export cue_dec_float
+func cue_dec_float(v C.cue_value, res *C.cue_float) C.cue_error {
+	x, err := cueValue(v).Float(nil)
+	if err != nil {
+		return cueErrorHandle(err)
+	}
+	ToCueFloat(x, res)
+	return 0
+}
+
 //export cue_dec_string
 func cue_dec_string(v C.cue_value, res **C.char) C.cue_error {
 	s, err := cueValue(v).String()
