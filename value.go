@@ -23,6 +23,9 @@ import "C"
 
 import (
 	"fmt"
+	"math"
+	"math/big"
+	"regexp"
 	"unsafe"
 
 	"cuelang.org/go/cue"
@@ -199,12 +202,38 @@ func cue_dec_double(v C.cue_value, res *C.double) C.cue_error {
 
 //export cue_dec_float
 func cue_dec_float(v C.cue_value, res *C.cue_float) C.cue_error {
-	x, err := cueValue(v).Float(nil)
+	cv := cueValue(v)
+
+	src, err := format.Node(cv.Syntax())
 	if err != nil {
 		return cueErrorHandle(err)
 	}
+
+	// multiply by 4 to get an overappoximation of base-2 precision from base-10
+	precision := decimalDigits(string(src)) * uint64(4)
+
+	var floatVal big.Float
+	floatVal.SetPrec(uint(min(precision, uint64(math.MaxUint))))
+
+	x, err := cv.Float(&floatVal)
+	if err != nil {
+		return cueErrorHandle(err)
+	}
+
 	ToCueFloat(x, res)
 	return 0
+}
+
+var decimalDigitsRE = regexp.MustCompile(`\s*^[+-]?0*(\d*)\.?(\d+)(?:[eE][+-]?\d+)?\s*$`)
+
+func decimalDigits(s string) uint64 {
+	m := decimalDigitsRE.FindStringSubmatch(s)
+
+	if len(m) == 0 {
+		return 1
+	}
+
+	return uint64(len(m[1])) + uint64(len(m[2]))
 }
 
 //export cue_dec_string

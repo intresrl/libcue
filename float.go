@@ -19,6 +19,7 @@ func ToCueFloat(x *big.Float, out *C.cue_float) {
 		out.sign = false
 		out.mantissa_len = 1
 		out.mantissa = C.CBytes([]byte{0})
+		return
 	}
 
 	// precision in bits of mantissa
@@ -45,8 +46,9 @@ func ToCueFloat(x *big.Float, out *C.cue_float) {
 
 	// Absolute value, big-endian.
 	b := mantissa.Bytes()
+    exp := int64(bigFloatExp) - int64(prec)
 
-	out.exponent = C.int64_t(int64(bigFloatExp) - int64(prec))
+	out.exponent = C.int64_t(exp)
 	out.sign = C.bool(isNegative)
 	out.mantissa_len = C.size_t(len(b))
 	out.mantissa = C.CBytes(b)
